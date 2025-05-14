@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>VeilProxy Web - Your Proxy. Your Rules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="assets/veilproxy.css">
+</head>
+<body>
+    <div class="veilproxy-container">
+        <div class="veilproxy-header">
+            <h2>VeilProxy</h2>
+            <div class="veilproxy-slogan">Your Proxy. Your Rules.</div>
+        </div>
+        <form id="proxyForm">
+
+            <label for="ipAddress">IP Address:</label>
+            <select id="ipAddress" name="ipAddress"></select>
+
+            <label for="internalPort">Internal Port:</label>
+            <input type="number" id="internalPort" name="internalPort" min="1" max="65535" value="5100" />
+
+            <label for="externalPort">External Port:</label>
+            <input type="number" id="externalPort" name="externalPort" min="1" max="65535" value="5000" />
+
+            <div class="veilproxy-checkbox">
+                <input type="checkbox" id="rewriteHostHeaders" checked />
+                <label for="rewriteHostHeaders">Rewrite host headers (IIS Express)</label>
+            </div>
+
+            <button class="veilproxy-btn" id="proxyBtn" type="button">
+                <span id="proxyBtnIcon" class="material-icons">play_arrow</span>
+                <span id="proxyBtnText">Start Proxy</span>
+            </button>
+        </form>
+        <div class="footer">© 2025 Veil Systems</div>
+        <div id="toast" class="veilproxy-toast"></div>
+        <audio id="toggleSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae0b2.mp3"></audio>
+    </div>
+    <script>
+        window.onload = function() {
+            fetch('http://localhost:3000/api/ips')
+                .then(response => response.json())
+                .then(ips => {
+                    var select = document.getElementById('ipAddress');
+                    select.innerHTML = '';
+                    if (ips.length === 0) {
+                        select.innerHTML = '<option>IP bulunamadı</option>';
+                    } else {
+                        ips.forEach(function(ip) {
+                            var opt = document.createElement('option');
+                            opt.value = ip;
+                            opt.textContent = ip;
+                            select.appendChild(opt);
+                        });
+                    }
+                })
+                .catch(() => {
+                    var select = document.getElementById('ipAddress');
+                    select.innerHTML = '<option>IP bulunamadı</option>';
+                });
+        };
+
+        const proxyBtn = document.getElementById('proxyBtn');
+        const proxyBtnIcon = document.getElementById('proxyBtnIcon');
+        const proxyBtnText = document.getElementById('proxyBtnText');
+        const form = document.getElementById('proxyForm');
+        const toast = document.getElementById('toast');
+        const toggleSound = document.getElementById('toggleSound');
+        let proxyActive = false;
+
+        function showToast(msg, color = '#43c59e') {
+            toast.textContent = msg;
+            toast.style.background = '#232326';
+            toast.style.color = color;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 1800);
+        }
+
+        proxyBtn.onclick = function() {
+            toggleSound.currentTime = 0;
+            toggleSound.play();
+            if (!proxyActive) {
+                startProxy();
+            } else {
+                stopProxy();
+            }
+        };
+
+        function setProxyBtn(active) {
+            if (active) {
+                proxyBtn.classList.add('stop');
+                proxyBtnIcon.textContent = 'stop';
+                proxyBtnText.textContent = 'Stop Proxy';
+            } else {
+                proxyBtn.classList.remove('stop');
+                proxyBtnIcon.textContent = 'play_arrow';
+                proxyBtnText.textContent = 'Start Proxy';
+            }
+        }
+
+        function startProxy() {
+            const externalPort = parseInt(document.getElementById('externalPort').value);
+            const internalPort = parseInt(document.getElementById('internalPort').value);
+            const rewriteHostHeaders = document.getElementById('rewriteHostHeaders').checked;
+            let startUrl = 'http://localhost:3000/api/start-proxy';
+            let body = JSON.stringify({ externalPort, internalPort, rewriteHostHeaders });
+            form.querySelectorAll('input, select').forEach(el => el.disabled = true);
+            proxyBtn.disabled = true;
+            fetch(startUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body
+            })
+            .then(res => res.json())
+            .then(data => {
+                proxyBtn.disabled = false;
+                if (!data.success) {
+                    showToast('Failed to start proxy: ' + (data.error || 'Unknown error'), '#e74c3c');
+                    setProxyBtn(false);
+                    form.querySelectorAll('input, select').forEach(el => el.disabled = false);
+                } else {
+                    proxyActive = true;
+                    setProxyBtn(true);
+                    showToast('Proxy started', '#43c59e');
+                }
+            })
+            .catch(err => {
+                proxyBtn.disabled = false;
+                showToast('Error occurred while starting proxy', '#e74c3c');
+                setProxyBtn(false);
+                form.querySelectorAll('input, select').forEach(el => el.disabled = false);
+            });
+        }
+        function stopProxy() {
+            const externalPort = parseInt(document.getElementById('externalPort').value);
+            let stopUrl = 'http://localhost:3000/api/stop-proxy';
+            let body = JSON.stringify({ externalPort });
+            proxyBtn.disabled = true;
+            fetch(stopUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body
+            })
+            .then(res => res.json())
+            .then(data => {
+                proxyBtn.disabled = false;
+                if (!data.success) {
+                    showToast('Failed to stop proxy: ' + (data.error || 'Unknown error'), '#e74c3c');
+                } else {
+                    proxyActive = false;
+                    setProxyBtn(false);
+                    showToast('Proxy stopped', '#2196f3');
+                    form.querySelectorAll('input, select').forEach(el => el.disabled = false);
+                }
+            })
+            .catch(err => {
+                proxyBtn.disabled = false;
+                showToast('Error occurred while stopping proxy', '#e74c3c');
+            });
+        }
+        setProxyBtn(false);
+    </script>
+</body>
+</html> 

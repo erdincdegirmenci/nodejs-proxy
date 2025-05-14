@@ -1,0 +1,140 @@
+body {
+    background-color: #0e0e10;
+    color: #e5e5e5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: "Orbitron", Arial, sans-serif;
+}
+.veilproxy-container {
+    background-color: #1c1c1e;
+    border-radius: 14px;
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    width: 25%;
+    box-shadow: 0 0 18px rgba(67, 197, 158, 0.22);
+    position: relative;
+}
+.veilproxy-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+.veilproxy-header h2 {
+    color: #43c59e;
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 0.2em;
+    letter-spacing: 1px;
+}
+.veilproxy-slogan {
+    font-size: 1.05rem;
+    color: #43c59e;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.2rem;
+}
+label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+    color: #b7ffec;
+}
+input, select {
+    width: 100%;
+    padding: 0.55rem;
+    margin-bottom: 1.1rem;
+    border: 1.5px solid #333;
+    border-radius: 8px;
+    background-color: #232326;
+    color: #fff;
+    outline: none;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+input:focus, select:focus {
+    border-color: #43c59e;
+}
+.veilproxy-btn {
+    background: linear-gradient(90deg, #43c59e 0%, #2196f3 100%);
+    color: #1c1c1e;
+    border: none;
+    padding: 1.1rem 0;
+    width: 100%;
+    font-size: 1.15rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(67, 197, 158, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2em;
+    transition: background 0.3s, color 0.3s;
+}
+.veilproxy-btn.stop {
+    background: linear-gradient(90deg, #e74c3c 0%, #f39c12 100%);
+    color: #fff;
+}
+.veilproxy-btn .material-icons {
+    font-size: 2.3em;
+    margin-bottom: 0.1em;
+}
+.veilproxy-btn:active::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.6);
+    opacity: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    transition: transform 0.3s, opacity 0.4s;
+    transform: translate(-50%, -50%) scale(25);
+    opacity: 0;
+    transition: 0s;
+}
+.veilproxy-btn:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 8px 32px rgba(67, 197, 158, 0.28);
+}
+.veilproxy-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.1rem;
+}
+.veilproxy-checkbox input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: #43c59e;
+    margin: 0;
+    vertical-align: middle;
+}
+.veilproxy-checkbox label {
+    white-space: nowrap;
+    font-size: 1.08rem;
+    color: #b7ffec;
+    display: flex;
+    align-items: center;
+    height: 22px;
+}
+.veilproxy-toast {
+    position: fixed; top: 32px; right: 32px; min-width: 180px; padding: 16px 28px; border-radius: 8px;
+    background: #232326; color: #43c59e; font-weight: 600; font-size: 1.1rem; opacity: 0; z-index: 9999;
+    box-shadow: 0 4px 16px rgba(33,150,243,0.12);
+    transition: opacity 0.4s, top 0.4s;
+    pointer-events: none;
+}
+.veilproxy-toast.show { opacity: 1; top: 56px; }
+.footer {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    color: #43c59e;
+    letter-spacing: 0.5px;
+} 
