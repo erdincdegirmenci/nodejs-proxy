@@ -73,11 +73,7 @@ veilproxy/
 
 ---
 
-## 🌐 Deployment
+##  Deployment
 - You can deploy VeilProxy on any server with Node.js
 - For HTTPS and domain, use Nginx/Apache as a reverse proxy
 
----
-
-## 📄 License
-MIT 
