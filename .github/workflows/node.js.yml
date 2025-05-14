@@ -1,14 +1,13 @@
-name: Node.js CI
+name: Node.js CI with Vercel Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ]  # Ana branch (main veya master olabilir)
   pull_request:
     branches: [ "main" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -17,26 +16,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Set up Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci
+    - run: npm ci  # Bağımlılıkları yükleyin
 
-    - name: Build project (if present)
-      run: npm run build --if-present
+    - run: npm test  # Testlerinizi çalıştırın (isteğe bağlı)
 
-    - name: Start server.js in background
-      run: |
-        node server.js &
-        sleep 5
+    - run: npm run build --if-present  # Build işlemi (isteğe bağlı)
 
-    - name: Test endpoint
-      run: curl http://localhost:3000/api/ips
-
-    - name: Run tests
-      run: npm test
+    # Vercel deploy adımı
+    - name: Vercel Deploy
+      uses: amondnet/vercel-action@v20.1.2
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Vercel API anahtarınız
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Vercel Organization ID (İlgili projeniz için Vercel'den alınabilir)
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}  # Vercel Project ID (Projeyi Vercel panelinizden alabilirsiniz)
+        vercel-args: '--prod'  # Üretim ortamında deploy etmek için
+      env:
+        VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}  # Vercel API anahtarınız
