@@ -10,6 +10,12 @@
     <link rel="stylesheet" href="assets/veilproxy.css">
 </head>
 <body>
+    <div class="veilproxy-setup">
+        <p>To start the backend, run the following commands in your terminal:</p>
+        <pre id="setupCmd">npm install
+node server.js</pre>
+        <button class="veilproxy-copy-btn" onclick="copySetupCmd()">Copy Commands</button>
+    </div>
     <div class="veilproxy-container">
         <div class="veilproxy-header">
             <h2>VeilProxy</h2>
@@ -107,7 +113,7 @@
             const internalPort = parseInt(document.getElementById('internalPort').value);
             const rewriteHostHeaders = document.getElementById('rewriteHostHeaders').checked;
             let startUrl = 'http://localhost:3000/api/start-proxy';
-            let body = JSON.stringify({ externalPort, internalPort, rewriteHostHeaders });
+            let body = JSON.stringify({ externalPort, internalPort, rewriteHostHeaders });      
             form.querySelectorAll('input, select').forEach(el => el.disabled = true);
             proxyBtn.disabled = true;
             fetch(startUrl, {
@@ -163,6 +169,13 @@
             });
         }
         setProxyBtn(false);
+
+        
+        function copySetupCmd() {
+            const cmd = document.getElementById('setupCmd').innerText;
+            navigator.clipboard.writeText(cmd);
+            showToast('Commands copied to clipboard!', '#43c59e');
+        }
     </script>
 </body>
 </html> 
