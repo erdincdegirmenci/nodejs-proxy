@@ -2,7 +2,7 @@ name: Node.js CI with Vercel Deploy
 
 on:
   push:
-    branches: [ "main" ]  # Ana branch (main veya master olabilir)
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -28,9 +28,9 @@ jobs:
 
     - run: npm run build --if-present  # Build işlemi (isteğe bağlı)
 
-    # Resmi Vercel deploy action'ı kullanılıyor
+    # Eski sürüm olan v20'yi kullanıyoruz
     - name: Vercel Deploy
-      uses: vercel/vercel-action@v30
+      uses: vercel/vercel-action@v20
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Vercel API anahtarınız
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Vercel Organization ID
