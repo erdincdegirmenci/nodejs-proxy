@@ -2,27 +2,30 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>VeilProxy Web - Your Proxy. Your Rules</title>
+    <title>VeilProxy - Your Proxy. Your Rules</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="assets/veilproxy.css">
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-    <div class="veilproxy-setup">
-        <p>To start the backend, run the following commands in your terminal:</p>
-        <pre id="setupCmd">npm install
-node server.js</pre>
-        <button class="veilproxy-copy-btn" onclick="copySetupCmd()">Copy Commands</button>
+    <div class="electron-alert" id="electronAlert">
+        <span class="close-alert" onclick="document.getElementById('electronAlert').style.display='none'">&times;</span>
+        <h4><span class="status-indicator"></span> Node.js Bağlantı Durumu</h4>
+        <p id="connectionMsg">Durum kontrol ediliyor...</p>
+        <button class="download-btn" id="actionButton" style="display: none;">
+            <span class="material-icons">download</span>
+            <span id="actionButtonText">Node.js Kurulum Yöneticisini Aç</span>
+        </button>
     </div>
+
     <div class="veilproxy-container">
         <div class="veilproxy-header">
             <h2>VeilProxy</h2>
             <div class="veilproxy-slogan">Your Proxy. Your Rules.</div>
         </div>
         <form id="proxyForm">
-
             <label for="ipAddress">IP Address:</label>
             <select id="ipAddress" name="ipAddress"></select>
 
@@ -47,7 +50,19 @@ node server.js</pre>
         <audio id="toggleSound" src="https://cdn.pixabay.com/audio/2022/07/26/audio_124bfae0b2.mp3"></audio>
     </div>
     <script>
+        function downloadElectronApp() {
+            // Electron uygulamasını indirme bağlantısı
+            window.location.href = 'dist/win-unpacked/VeilProxy.exe';
+            showToast('İndirme başlatılıyor...... İndirme tamamlandığında çalıştırın.', '#43c59e');
+        }
+
         window.onload = function() {
+            // Node.js backend bağlantısını kontrol et
+            checkBackendConnection();
+            
+            // Periyodik olarak backend bağlantısını kontrol et
+            setInterval(checkBackendConnection, 30000); // 30 saniyede bir kontrol et
+            
             fetch('http://localhost:3000/api/ips')
                 .then(response => response.json())
                 .then(ips => {
@@ -63,12 +78,71 @@ node server.js</pre>
                             select.appendChild(opt);
                         });
                     }
+                    // Backend bağlantısı başarılı, uyarıyı gizle
+                    document.getElementById('electronAlert').classList.add('connected');
                 })
                 .catch(() => {
                     var select = document.getElementById('ipAddress');
                     select.innerHTML = '<option>IP bulunamadı</option>';
+                    // Backend bağlantısı başarısız, uyarıyı göster
+                    document.getElementById('electronAlert').style.display = 'block';
                 });
         };
+
+        function checkBackendConnection() {
+            fetch('http://localhost:3000/api/nodejs/status')
+                .then(response => response.json())
+                .then(data => {
+                    const alertBox = document.getElementById('electronAlert');
+                    const connectionMsg = document.getElementById('connectionMsg');
+                    const actionButton = document.getElementById('actionButton');
+                    const actionButtonText = document.getElementById('actionButtonText');
+                    
+                    if (data.installed) {
+                        // Node.js kurulu ve çalışıyor
+                        alertBox.classList.add('connected');
+                        connectionMsg.textContent = `Node.js kurulu ve çalışıyor. (Versiyon: ${data.version})`;
+                        actionButton.style.display = 'none';
+                        
+                        
+                    } else {
+                        // Node.js kurulu değil veya eski sürüm
+                        alertBox.classList.remove('connected');
+                        connectionMsg.textContent = 'Node.js kurulu değil veya güncel değil. Lütfen Node.js Kurulum Yöneticisini çalıştırın.';
+                        actionButton.style.display = 'inline-flex';
+                        actionButtonText.textContent = 'Node.js Kurulum Yöneticisini Aç';
+                        actionButton.onclick = openNodejsInstaller;
+                    }
+                })
+                .catch(() => {
+                    // Bağlantı hatası - Node.js servisi çalışmıyor
+                    const alertBox = document.getElementById('electronAlert');
+                    const connectionMsg = document.getElementById('connectionMsg');
+                    const actionButton = document.getElementById('actionButton');
+                    const actionButtonText = document.getElementById('actionButtonText');
+                    
+                    alertBox.classList.remove('connected');
+                    alertBox.style.display = 'block';
+                    connectionMsg.textContent = 'VeilProxy servisine bağlanılamıyor. Lütfen Node.js Kurulum Yöneticisini çalıştırın.';
+                    actionButton.style.display = 'inline-flex';
+                    actionButtonText.textContent = 'Node.js Kurulum Yöneticisini Aç';
+                    actionButton.onclick = openNodejsInstaller;
+                });
+        }
+
+        function openNodejsInstaller() {
+            if (window.require) {
+                // Electron ortamı
+                const { ipcRenderer, shell } = window.require('electron');
+                ipcRenderer.invoke('get-exe-path').then((exePath) => {
+                    shell.openPath(exePath);
+                });
+            } else {
+                // Web ortamı (geliştirme/test)
+                window.location.href = 'dist/VeilProxy.zip';
+                showToast('Lütfen indirilen zip dosyasını açın ve içindeki "VeilProxy 1.0.0.exe" dosyasını çalıştırın.', '#43c59e');
+            }
+        }
 
         const proxyBtn = document.getElementById('proxyBtn');
         const proxyBtnIcon = document.getElementById('proxyBtnIcon');
@@ -83,7 +157,7 @@ node server.js</pre>
             toast.style.background = '#232326';
             toast.style.color = color;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 1800);
+            setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
         proxyBtn.onclick = function() {
@@ -169,13 +243,6 @@ node server.js</pre>
             });
         }
         setProxyBtn(false);
-
-        
-        function copySetupCmd() {
-            const cmd = document.getElementById('setupCmd').innerText;
-            navigator.clipboard.writeText(cmd);
-            showToast('Commands copied to clipboard!', '#43c59e');
-        }
     </script>
 </body>
 </html> 

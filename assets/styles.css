@@ -1,0 +1,485 @@
+/* Common styles */
+:root {
+    --primary-color: #43c59e;
+    --primary-dark: #36a785;
+    --secondary-color: #2196f3;
+    --secondary-dark: #1976d2;
+    --background-dark: #0e0e10;
+    --container-bg: #1c1c1e;
+    --text-light: #e5e5e5;
+    --text-muted: #b7ffec;
+    --border-color: #333;
+    --input-bg: #232326;
+    --error-color: #ef5350;
+    --warning-color: #ffa726;
+    --success-color: #66bb6a;
+}
+
+body {
+    font-family: "Orbitron", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container styles */
+.veilproxy-container,
+.installation-container {
+    background-color: var(--container-bg);
+    border-radius: 14px;
+    padding: 2.2rem 2rem 1.5rem 2rem;
+    width: 500px;
+    box-shadow: 0 0 18px rgba(67, 197, 158, 0.22);
+    position: relative;
+    margin: 0;
+}
+
+/* Header styles */
+.veilproxy-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.veilproxy-header h2 {
+    color: var(--primary-color);
+    font-size: 2.1rem;
+    font-weight: 700;
+    margin-bottom: 0.2em;
+    letter-spacing: 1px;
+}
+
+.veilproxy-slogan {
+    font-size: 1.05rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.2rem;
+}
+
+/* Form elements */
+label {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    display: block;
+    color: var(--text-muted);
+}
+
+input, select {
+    width: 100%;
+    padding: 0.55rem;
+    margin-bottom: 1.1rem;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--input-bg);
+    color: var(--text-light);
+    outline: none;
+    font-size: 1rem;
+    transition: border 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-color);
+}
+
+/* Button styles */
+.veilproxy-btn,
+.action-button {
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: var(--container-bg);
+    border: none;
+    padding: 1.1rem 0;
+    width: 100%;
+    font-size: 1.15rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(67, 197, 158, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s;
+}
+
+.veilproxy-btn:hover,
+.action-button:hover,
+.download-btn:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 8px 32px rgba(67, 197, 158, 0.28);
+}
+
+.veilproxy-btn.stop {
+    background: linear-gradient(90deg, #e74c3c 0%, #f39c12 100%);
+    color: var(--text-light);
+}
+
+/* Checkbox styles */
+.veilproxy-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.1rem;
+}
+
+.veilproxy-checkbox input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--primary-color);
+    margin: 0;
+    vertical-align: middle;
+}
+
+.veilproxy-checkbox label {
+    white-space: nowrap;
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    height: 22px;
+}
+
+/* Alert styles */
+.electron-alert,
+.veilproxy-setup {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: #18181a;
+    border-radius: 10px;
+    padding: 18px 24px;
+    width: 370px;
+    color: var(--text-muted);
+    font-size: 1.02rem;
+    box-shadow: 0 0 18px rgba(67, 197, 158, 0.22);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    z-index: 100;
+}
+
+.electron-alert h4 {
+    color: var(--warning-color);
+    margin-bottom: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.electron-alert.connected h4 {
+    color: var(--primary-color);
+}
+
+.electron-alert p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.electron-alert .download-btn {
+    background-color: var(--warning-color);
+    color: var(--container-bg);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.electron-alert .download-btn:hover {
+    background-color: #f57c00;
+}
+
+.electron-alert.connected .download-btn {
+    background-color: var(--primary-color);
+}
+
+.electron-alert.connected .download-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+.electron-alert .material-icons {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.close-alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #aaa;
+}
+
+.close-alert:hover {
+    color: var(--text-light);
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: var(--warning-color);
+}
+
+.connected .status-indicator {
+    background-color: var(--primary-color);
+}
+
+/* Status styles */
+.status-icon {
+    font-size: 48px;
+    margin-bottom: 1rem;
+}
+
+.status-checking { color: var(--warning-color); }
+.status-not-installed { color: var(--error-color); }
+.status-installed { color: var(--success-color); }
+
+/* Progress bar */
+.progress-container {
+    margin: 1rem 0;
+    display: none;
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--secondary-color);
+    width: 0%;
+    transition: width 0.3s ease;
+    animation: progress-animation 2s infinite;
+}
+
+@keyframes progress-animation {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* Toast notification */
+.veilproxy-toast {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    min-width: 180px;
+    padding: 16px 28px;
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    opacity: 0;
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(33,150,243,0.12);
+    transition: opacity 0.4s, top 0.4s;
+    pointer-events: none;
+}
+
+.veilproxy-toast.show {
+    opacity: 1;
+    top: 56px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 1.2rem;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+    letter-spacing: 0.5px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+        min-height: 100vh;
+        align-items: flex-start;
+    }
+
+    .veilproxy-container,
+    .installation-container {
+        width: 90%;
+        max-width: 500px;
+        padding: 1.8rem 1.5rem 1.2rem 1.5rem;
+        margin-top: 240px;
+    }
+    
+    .electron-alert,
+    .veilproxy-setup {
+        width: 90%;
+        max-width: 320px;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 140px;
+    }
+
+    .veilproxy-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .veilproxy-slogan {
+        font-size: 0.95rem;
+    }
+
+    .veilproxy-btn,
+    .action-button,
+    .download-btn {
+        padding: 0.9rem 0;
+        font-size: 1rem;
+    }
+
+    .veilproxy-toast {
+        width: 90%;
+        max-width: 320px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .veilproxy-container,
+    .installation-container {
+        width: 95%;
+        padding: 1.5rem 1.2rem 1rem 1.2rem;
+        margin-top: 220px;
+    }
+    
+    .veilproxy-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .veilproxy-slogan {
+        font-size: 0.9rem;
+    }
+    
+    .veilproxy-btn,
+    .action-button,
+    .download-btn {
+        padding: 0.8rem 0;
+        font-size: 0.95rem;
+    }
+
+    .electron-alert h4 {
+        font-size: 14px;
+    }
+
+    .electron-alert p {
+        font-size: 12px;
+    }
+
+    .veilproxy-checkbox label {
+        font-size: 0.95rem;
+    }
+
+    input, select {
+        font-size: 0.95rem;
+        padding: 0.45rem;
+    }
+
+    .electron-alert,
+    .veilproxy-setup {
+        top: 130px;
+    }
+}
+
+.electron-alert.connected {
+    border-left-color: #43c59e;
+}
+.electron-alert h4 {
+    color: #ff9800;
+    margin-bottom: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+.electron-alert.connected h4 {
+    color: #43c59e;
+}
+.electron-alert p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.electron-alert .download-btn {
+    
+    box-shadow: 0 0 18px rgba(67, 197, 158, 0.22);  
+    background-color: #ff9800;
+    color: #232326;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+}
+.electron-alert .download-btn:hover {
+    background-color: #f57c00;
+}
+.electron-alert.connected .download-btn {
+    background-color: #43c59e;
+}
+.electron-alert.connected .download-btn:hover {
+    background-color: #36a785;
+}
+.electron-alert .material-icons {
+    font-size: 18px;
+    margin-right: 5px;
+}
+.close-alert {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #aaa;
+}
+.close-alert:hover {
+    color: #fff;
+}
+.status-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    background-color: #ff9800;
+}
+.connected .status-indicator {
+    background-color: #43c59e;
+}
+@media (max-width: 768px) {
+    .electron-alert {
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 320px;
+    }
+}
