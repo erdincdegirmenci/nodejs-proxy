@@ -6,7 +6,7 @@ VeilProxy is a modern, stylish, and easy-to-use web-based TCP/HTTP proxy manager
 
 ---
 
-## 🚀 Features
+##  Features
 - **Modern UI:** Dark theme, responsive, and beautiful interface (HTML/CSS/JS, Orbitron font)
 - **Easy Proxy Management:** Start/stop proxy with a single button
 - **Supports Any App:** Works with IIS Express, .NET, Node.js, or any TCP/HTTP service
@@ -17,11 +17,12 @@ VeilProxy is a modern, stylish, and easy-to-use web-based TCP/HTTP proxy manager
 ---
 
 ## 📸 Screenshot
-> _Add a screenshot here_
+![image](https://github.com/user-attachments/assets/cf0962a8-e8da-41bb-bb02-560b32c1d267)
+
 
 ---
 
-## ⚡️ Quick Start
+##  Quick Start
 
 ### 1. Clone the Repository
 ```bash
@@ -51,7 +52,7 @@ node server.js
 
 ---
 
-## 🛠️ Project Structure
+##  Project Structure
 ```
 veilproxy/
 ├── assets/
@@ -64,7 +65,7 @@ veilproxy/
 
 ---
 
-## ⚙️ Configuration & Usage
+##  Configuration & Usage
 - **IP Address:** Select which local IP to listen on (auto-detected)
 - **Internal/External Port:** Set the ports for proxying
 - **Rewrite host headers:** Enable for IIS Express or apps that require a specific Host header
@@ -74,13 +75,7 @@ veilproxy/
 
 ## 🌐 Deployment
 - You can deploy VeilProxy on any server with Node.js
-- For production, use [pm2](https://pm2.keymetrics.io/) or Docker for process management
 - For HTTPS and domain, use Nginx/Apache as a reverse proxy
-
----
-
-## 🤝 Contributing
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
 ---
 
