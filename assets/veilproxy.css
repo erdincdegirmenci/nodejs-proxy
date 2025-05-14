@@ -7,14 +7,16 @@ body {
     height: 100vh;
     margin: 0;
     font-family: "Orbitron", Arial, sans-serif;
+    position: relative;
 }
 .veilproxy-container {
     background-color: #1c1c1e;
     border-radius: 14px;
     padding: 2.2rem 2rem 1.5rem 2rem;
-    width: 25%;
+    width: 500px;
     box-shadow: 0 0 18px rgba(67, 197, 158, 0.22);
     position: relative;
+    margin: 0;
 }
 .veilproxy-header {
     text-align: center;
@@ -137,4 +139,97 @@ input:focus, select:focus {
     font-size: 0.85rem;
     color: #43c59e;
     letter-spacing: 0.5px;
+}
+.veilproxy-setup {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    margin-top: 0;
+    background: #18181a;
+    border-radius: 10px;
+    padding: 18px 24px 18px 24px;
+    width: 370px;
+    color: #b7ffec;
+    font-size: 1.02rem;
+    box-shadow: 0 2px 12px rgba(67,197,158,0.10);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    z-index: 100;
+}
+.veilproxy-setup pre {
+    background: #232326;
+    color: #43c59e;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 1rem;
+    margin: 0;
+    user-select: all;
+}
+.veilproxy-copy-btn {
+    background: linear-gradient(90deg, #43c59e 0%, #2196f3 100%);
+    color: #18181a;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+.veilproxy-copy-btn:hover {
+    filter: brightness(1.08);
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+    .veilproxy-container {
+        width: 80%;
+        padding: 1.8rem 1.5rem 1.2rem 1.5rem;
+    }
+    
+    .veilproxy-setup {
+        position: relative;
+        top: unset;
+        left: unset;
+        width: auto;
+        max-width: 100%;
+        margin: 20px auto 0;
+        font-size: 0.95rem;
+    }
+    
+    .veilproxy-setup pre {
+        font-size: 0.9rem;
+        overflow-x: auto;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+    
+    body {
+        flex-direction: column;
+        padding: 20px 10px;
+        height: auto;
+        min-height: 100vh;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .veilproxy-container {
+        width: 95%;
+        padding: 1.5rem 1.2rem 1rem 1.2rem;
+    }
+    
+    .veilproxy-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .veilproxy-slogan {
+        font-size: 0.95rem;
+    }
+    
+    .veilproxy-btn {
+        padding: 0.9rem 0;
+    }
 } 
