@@ -28,9 +28,9 @@ jobs:
 
     - run: npm run build --if-present  # Build işlemi (isteğe bağlı)
 
-    # Eski sürüm olan v20'yi kullanıyoruz
+    # Vercel action'ın en güncel sürümünü kullanıyoruz
     - name: Vercel Deploy
-      uses: vercel/vercel-action@v20
+      uses: vercel/vercel-action@v25.2.0
       with:
         vercel-token: ${{ secrets.VERCEL_TOKEN }}  # Vercel API anahtarınız
         vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}  # Vercel Organization ID
