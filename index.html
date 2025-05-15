@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>VeilProxy - Your Proxy. Your Rules</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="assets/veilproxy-icon.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -12,18 +13,21 @@
 <body>
     <div class="electron-alert" id="electronAlert">
         <span class="close-alert" onclick="document.getElementById('electronAlert').style.display='none'">&times;</span>
-        <h4><span class="status-indicator"></span> Node.js Bağlantı Durumu</h4>
-        <p id="connectionMsg">Durum kontrol ediliyor...</p>
+        <h4><span class="status-indicator"></span> Node.js Connection Status</h4>
+        <p id="connectionMsg" >Checking status...</p>
         <button class="download-btn" id="actionButton" style="display: none;">
             <span class="material-icons">download</span>
-            <span id="actionButtonText">Node.js Kurulum Yöneticisini Aç</span>
+            <span id="actionButtonText">Open Node.js Installer</span>
         </button>
     </div>
 
     <div class="veilproxy-container">
         <div class="veilproxy-header">
-            <h2>VeilProxy</h2>
-            <div class="veilproxy-slogan">Your Proxy. Your Rules.</div>
+            <img src="assets/veilproxy-icon.png" alt="VeilProxy Icon" class="veilproxy-logo">
+            <div class="veilproxy-title-group">
+                <h2>VeilProxy</h2>
+                <div class="veilproxy-slogan">Your Proxy. Your Rules.</div>
+            </div>
         </div>
         <form id="proxyForm">
             <label for="ipAddress">IP Address:</label>
@@ -51,25 +55,20 @@
     </div>
     <script>
         function downloadElectronApp() {
-            // Electron uygulamasını indirme bağlantısı
             window.location.href = 'dist/win-unpacked/VeilProxy.exe';
-            showToast('İndirme başlatılıyor...... İndirme tamamlandığında çalıştırın.', '#43c59e');
+            showToast('Download started... Please run the file after download completes.', '#43c59e');
         }
 
         window.onload = function() {
-            // Node.js backend bağlantısını kontrol et
             checkBackendConnection();
-            
-            // Periyodik olarak backend bağlantısını kontrol et
-            setInterval(checkBackendConnection, 30000); // 30 saniyede bir kontrol et
-            
+            setInterval(checkBackendConnection, 30000);
             fetch('http://localhost:3000/api/ips')
                 .then(response => response.json())
                 .then(ips => {
                     var select = document.getElementById('ipAddress');
                     select.innerHTML = '';
                     if (ips.length === 0) {
-                        select.innerHTML = '<option>IP bulunamadı</option>';
+                        select.innerHTML = '<option>No IP found</option>';
                     } else {
                         ips.forEach(function(ip) {
                             var opt = document.createElement('option');
@@ -78,13 +77,11 @@
                             select.appendChild(opt);
                         });
                     }
-                    // Backend bağlantısı başarılı, uyarıyı gizle
                     document.getElementById('electronAlert').classList.add('connected');
                 })
                 .catch(() => {
                     var select = document.getElementById('ipAddress');
-                    select.innerHTML = '<option>IP bulunamadı</option>';
-                    // Backend bağlantısı başarısız, uyarıyı göster
+                    select.innerHTML = '<option>No IP found</option>';
                     document.getElementById('electronAlert').style.display = 'block';
                 });
         };
@@ -97,50 +94,42 @@
                     const connectionMsg = document.getElementById('connectionMsg');
                     const actionButton = document.getElementById('actionButton');
                     const actionButtonText = document.getElementById('actionButtonText');
-                    
                     if (data.installed) {
-                        // Node.js kurulu ve çalışıyor
                         alertBox.classList.add('connected');
-                        connectionMsg.textContent = `Node.js kurulu ve çalışıyor. (Versiyon: ${data.version})`;
+                        connectionMsg.textContent = `Node.js is installed and running.  \n(Version: ${data.version})`;
+                        connectionMsg.style.whiteSpace = 'pre-line';
                         actionButton.style.display = 'none';
-                        
-                        
                     } else {
-                        // Node.js kurulu değil veya eski sürüm
                         alertBox.classList.remove('connected');
-                        connectionMsg.textContent = 'Node.js kurulu değil veya güncel değil. Lütfen Node.js Kurulum Yöneticisini çalıştırın.';
+                        connectionMsg.textContent = 'Node.js is not installed or outdated. Please run the Node.js Installer.';
                         actionButton.style.display = 'inline-flex';
-                        actionButtonText.textContent = 'Node.js Kurulum Yöneticisini Aç';
+                        actionButtonText.textContent = 'Open Node.js Installer';
                         actionButton.onclick = openNodejsInstaller;
                     }
                 })
                 .catch(() => {
-                    // Bağlantı hatası - Node.js servisi çalışmıyor
                     const alertBox = document.getElementById('electronAlert');
                     const connectionMsg = document.getElementById('connectionMsg');
                     const actionButton = document.getElementById('actionButton');
                     const actionButtonText = document.getElementById('actionButtonText');
-                    
                     alertBox.classList.remove('connected');
                     alertBox.style.display = 'block';
-                    connectionMsg.textContent = 'VeilProxy servisine bağlanılamıyor. Lütfen Node.js Kurulum Yöneticisini çalıştırın.';
+                    connectionMsg.textContent = 'Cannot connect to VeilProxy service. Please run the Node.js Installer.';
                     actionButton.style.display = 'inline-flex';
-                    actionButtonText.textContent = 'Node.js Kurulum Yöneticisini Aç';
+                    actionButtonText.textContent = 'Open Node.js Installer';
                     actionButton.onclick = openNodejsInstaller;
                 });
         }
 
         function openNodejsInstaller() {
             if (window.require) {
-                // Electron ortamı
                 const { ipcRenderer, shell } = window.require('electron');
                 ipcRenderer.invoke('get-exe-path').then((exePath) => {
                     shell.openPath(exePath);
                 });
             } else {
-                // Web ortamı (geliştirme/test)
                 window.location.href = 'https://github.com/erdincdegirmenci/nodejs-veilproxy/releases/download/v1.0.0/VeilProxy.1.0.0.zip';
-                showToast('Lütfen indirilen zip dosyasını açın ve içindeki "VeilProxy 1.0.0.exe" dosyasını çalıştırın.', '#43c59e');
+                showToast('Please extract the downloaded zip and run "VeilProxy 1.0.0.exe" inside.', '#43c59e');
             }
         }
 

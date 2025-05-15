@@ -1,50 +1,73 @@
-# VeilProxy - Your Proxy. Your Rules.
+# VeilProxy - Node.js Proxy & Installer
 
-VeilProxy is an Electron-based desktop application for creating HTTP and TCP proxies.
+![VeilProxy Logo](assets/veilproxy-icon.png)
+
+## Overview
+VeilProxy is a modern, user-friendly proxy management tool and Node.js installer for Windows, built with Electron and Express. It allows you to easily check, install, and manage Node.js on your system, and provides a simple interface to set up HTTP/WS proxies for local development.
 
 ## Features
+- **Node.js Installation Check:** Detects if Node.js is installed and shows the current version.
+- **One-Click Node.js Installer:** Installs Node.js with a single click if not present.
+- **Proxy Management:** Easily start/stop HTTP/WS proxies between internal and external ports.
+- **System Tray Integration:** Minimize to tray, quick show/hide, and exit options.
+- **Modern UI:** Responsive, dark-themed interface with custom branding.
 
-- Create HTTP and TCP proxies
-- Rewrite host headers for IIS Express compatibility
-- Easy-to-use interface with toggle-based controls
-- Support for WebSocket connections (TCP proxy)
+## Screenshots
+![Main UI](docs/screenshot-main.png)
+![Node.js Installer](docs/screenshot-installer.png)
 
-## Installation
+## Getting Started
 
-### Pre-packaged App
+### Prerequisites
+- [Node.js](https://nodejs.org/) (for development/build)
+- [Git](https://git-scm.com/)
 
-1. Download the latest release from the releases page
-2. Extract the zip file
-3. Run VeilProxy.exe
-
-### From Source
-
-If you want to run from source:
-
-1. Make sure you have [Node.js](https://nodejs.org/) installed
-2. Clone this repository
-3. Open terminal/command prompt in the project folder
-4. Install dependencies:
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/nodejs-veilproxy.git
+   cd nodejs-veilproxy
    ```
+2. **Install dependencies:**
+   ```bash
    npm install
    ```
-5. Start the application:
-   ```
+3. **Run the app in development mode:**
+   ```bash
    npm start
    ```
 
+### Build for Windows
+```bash
+npm run build
+```
+The output will be in the `dist/` folder.
+
 ## Usage
+- **Proxy Setup:**
+  - Select your IP address, internal port, and external port.
+  - Optionally enable "Rewrite host headers" for IIS Express.
+  - Click **Start Proxy** to begin forwarding traffic.
+- **Node.js Installer:**
+  - If Node.js is not detected, use the installer page to download and install it.
+- **Tray Menu:**
+  - Right-click the tray icon for quick show/hide and exit options.
 
-1. Select your local IP address from the dropdown
-2. Set the internal port (the application you want to proxy to)
-3. Set the external port (the port VeilProxy will listen on)
-4. Check "Rewrite host headers" if you're using IIS Express
-5. Click "Start Proxy" button
+## File Structure
+```
+assets/                # Icons, styles, and images
+main.js                # Electron main process
+index.html             # Main UI
+nodejs-installer.html  # Node.js installer UI
+assets/styles.css      # Custom styles
+```
 
-## Support
-
-For issues or feature requests, please create an issue on GitHub.
+## Customization
+- **Branding:** Replace `assets/veilproxy-icon.png` with your own logo for custom branding.
+- **Installer Version:** Update the Node.js version in `nodejs-installer.html` if needed.
 
 ## License
+MIT
 
-This project is licensed under the ISC License. 
+---
+**Developed by Veil Systems.** 

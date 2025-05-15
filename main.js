@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
 const express = require('express');
@@ -8,37 +8,76 @@ const net = require('net');
 const os = require('os');
 const { exec } = require('child_process');
 
-// Referans saklayalım, yoksa GC pencereyi kapatabilir
+
 let mainWindow;
 let server;
 let expressApp;
 let httpProxyServer = {};
 let tcpProxyServer = {};
+let tray = null;
+let isQuitting = false;
 
 function createWindow() {
-  // Tarayıcı penceresini oluştur
   mainWindow = new BrowserWindow({
-    width: 600,
-    height: 500,
+    height: 350,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
     },
     autoHideMenuBar: true,
     resizable: false,
-    title: 'Node.js Kurulum Yöneticisi'
+    title: 'Node.js Installer',
+    icon: path.join(__dirname, 'assets', 'veilproxy-icon.png')
   });
 
-  // Express sunucusunu başlat
   startExpressServer();
 
-  // HTML yükle
   mainWindow.loadFile('nodejs-installer.html');
 
-  // Pencere kapandığında deinit
+
+  mainWindow.on('close', function(event) {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
+
   mainWindow.on('closed', function() {
     stopAllProxies();
     mainWindow = null;
+  });
+
+  createTray();
+}
+
+function createTray() {
+  tray = new Tray(path.join(__dirname, 'assets', 'veilproxy-icon.png'));
+  
+  const contextMenu = Menu.buildFromTemplate([
+    { 
+      label: 'Show', 
+      click: () => {
+        mainWindow.show();
+      }
+    },
+    { 
+      label: 'Exit', 
+      click: () => {
+        isQuitting = true;
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setToolTip('Node.js Installer');
+  tray.setContextMenu(contextMenu);
+
+  tray.on('click', () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+    } else {
+      mainWindow.show();
+    }
   });
 }
 
@@ -47,10 +86,8 @@ function startExpressServer() {
   expressApp.use(express.json());
   expressApp.use(cors());
   
-  // Statik dosyaları servis et
   expressApp.use(express.static(__dirname));
   
-  // Node.js durum kontrolü endpoint'i
   expressApp.get('/api/nodejs/status', (req, res) => {
     exec('node --version', (error, stdout, stderr) => {
       
@@ -61,35 +98,62 @@ function startExpressServer() {
       
       if (stdout) {
         const version = stdout.trim();
-        console.log('Node.js version:', version); // Debug için
+        console.log('Node.js version:', version);
         
-        // Node.js kurulu ve çalışıyor
         return res.json({ 
           installed: true, 
           version: version 
         });
       }
       
-      // Node.js kurulu değil
       return res.json({ installed: false });
     });
   });
+
+  expressApp.post('/api/nodejs/stop', (req, res) => {
+    try {
+      res.json({ success: true });
+      
+      if (server) {
+        server.close(() => {
+          console.log('Express server stopped');
+          stopAllProxies();
+        });
+      }
+    } catch (error) {
+      console.error('Error stopping Node.js:', error);
+      res.json({ success: false, error: error.message });
+    }
+  });
+
+  expressApp.post('/api/nodejs/start', (req, res) => {
+    try {
+      if (!server) {
+        server = expressApp.listen(3000, () => {
+          console.log('Express server restarted on port 3000');
+          res.json({ success: true });
+        });
+      } else {
+        res.json({ success: false, error: 'Server is already running' });
+      }
+    } catch (error) {
+      console.error('Error starting Node.js:', error);
+      res.json({ success: false, error: error.message });
+    }
+  });
   
-  // API endpoint'leri
   expressApp.get('/api/ips', (req, res) => {
     const ifaces = os.networkInterfaces();
     const ips = [];
     
     Object.keys(ifaces).forEach(ifname => {
       ifaces[ifname].forEach(iface => {
-        // IPv4 ve harici IP'leri filtrele
         if (iface.family === 'IPv4' && !iface.internal) {
           ips.push(iface.address);
         }
       });
     });
     
-    // Loopback'i ekle
     ips.push('127.0.0.1');
     ips.push('localhost');
     
@@ -104,7 +168,6 @@ function startExpressServer() {
     }
     
     try {
-      // HTTP proxy başlat
       httpProxyServer[externalPort] = httpProxy.createServer({
         target: {
           host: 'localhost',
@@ -126,7 +189,6 @@ function startExpressServer() {
       
       httpProxyServer[externalPort].listen(externalPort);
       
-      // TCP proxy başlat (WebSocket/Blazor vs desteklenmesi için)
       tcpProxyServer[externalPort] = {
         server: net.createServer(),
         connections: []
@@ -186,7 +248,6 @@ function startExpressServer() {
       }
       
       if (tcpProxyServer[externalPort]) {
-        // Tüm bağlantıları kapat
         tcpProxyServer[externalPort].connections.forEach(conn => {
           if (conn.client) conn.client.end();
           if (conn.server) conn.server.end();
@@ -203,14 +264,12 @@ function startExpressServer() {
     }
   });
   
-  // Port 3000'de dinle
   server = expressApp.listen(3000, () => {
     console.log('Express server running on port 3000');
   });
 }
 
 function stopAllProxies() {
-  // Tüm proxy'leri durdur
   Object.keys(httpProxyServer).forEach(port => {
     if (httpProxyServer[port]) {
       httpProxyServer[port].close();
@@ -228,16 +287,13 @@ function stopAllProxies() {
     }
   });
   
-  // Express sunucusunu durdur
   if (server) {
     server.close();
   }
 }
 
-// Electron hazır olduğunda
 app.on('ready', createWindow);
 
-// Tüm pencereler kapandığında çık
 app.on('window-all-closed', function() {
   if (process.platform !== 'darwin') {
     stopAllProxies();
@@ -251,7 +307,6 @@ app.on('activate', function() {
   }
 });
 
-// Uygulama kapatılırken
 app.on('before-quit', () => {
   stopAllProxies();
 }); 

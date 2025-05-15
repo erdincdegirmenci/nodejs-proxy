@@ -27,7 +27,6 @@ body {
     align-items: center;
 }
 
-/* Container styles */
 .veilproxy-container,
 .installation-container {
     background-color: var(--container-bg);
@@ -39,10 +38,26 @@ body {
     margin: 0;
 }
 
-/* Header styles */
 .veilproxy-header {
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 28px;
     margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.veilproxy-logo {
+    height: 80px;
+    width: 80px;
+    min-width: 80px;
+    min-height: 80px;
+    object-fit: contain;
+}
+
+.veilproxy-title-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .veilproxy-header h2 {
@@ -61,7 +76,6 @@ body {
     margin-bottom: 1.2rem;
 }
 
-/* Form elements */
 label {
     font-weight: 500;
     margin-bottom: 0.25rem;
@@ -86,7 +100,6 @@ input:focus, select:focus {
     border-color: var(--primary-color);
 }
 
-/* Button styles */
 .veilproxy-btn,
 .action-button {
     background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -120,7 +133,6 @@ input:focus, select:focus {
     color: var(--text-light);
 }
 
-/* Checkbox styles */
 .veilproxy-checkbox {
     display: flex;
     align-items: center;
@@ -145,7 +157,6 @@ input:focus, select:focus {
     height: 22px;
 }
 
-/* Alert styles */
 .electron-alert,
 .veilproxy-setup {
     position: absolute;
@@ -251,7 +262,6 @@ input:focus, select:focus {
 .status-not-installed { color: var(--error-color); }
 .status-installed { color: var(--success-color); }
 
-/* Progress bar */
 .progress-container {
     margin: 1rem 0;
     display: none;
@@ -278,7 +288,6 @@ input:focus, select:focus {
     100% { width: 100%; }
 }
 
-/* Toast notification */
 .veilproxy-toast {
     position: fixed;
     top: 32px;
@@ -302,7 +311,6 @@ input:focus, select:focus {
     top: 56px;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     margin-top: 1.2rem;
@@ -311,7 +319,6 @@ input:focus, select:focus {
     letter-spacing: 0.5px;
 }
 
-/* Responsive styles */
 @media screen and (max-width: 768px) {
     body {
         padding: 20px 10px;
