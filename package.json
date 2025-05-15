@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder",    
+    "test": "echo \"No tests yet\""
   },
   "keywords": ["proxy", "tcp", "http", "veilproxy"],
   "author": "Veil Systems",
