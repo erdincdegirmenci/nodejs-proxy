@@ -13,8 +13,8 @@ VeilProxy is a modern, user-friendly proxy management tool and Node.js installer
 - **Modern UI:** Responsive, dark-themed interface with custom branding.
 
 ## Screenshots
-![Main UI](docs/screenshot-main.png)
-![Node.js Installer](docs/screenshot-installer.png)
+![Main UI](![image](https://github.com/user-attachments/assets/78468c6f-1fb4-41a3-a458-dc2c06367f6b))
+![Node.js Installer](![image](https://github.com/user-attachments/assets/ca01af3d-99b7-42d4-b702-994c1a8c7c7d))
 
 ## Getting Started
 
