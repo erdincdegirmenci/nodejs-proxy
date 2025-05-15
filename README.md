@@ -68,6 +68,3 @@ assets/styles.css      # Custom styles
 
 ## License
 MIT
-
----
-**Developed by Veil Systems.** 
