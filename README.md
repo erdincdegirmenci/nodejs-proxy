@@ -3,7 +3,9 @@
 ![VeilProxy Logo](assets/veilproxy-icon.png)
 
 ## Overview
-VeilProxy is a modern, user-friendly proxy management tool and Node.js installer for Windows, built with Electron and Express. It allows you to easily check, install, and manage Node.js on your system, and provides a simple interface to set up HTTP/WS proxies for local development.
+VeilProxy is a modern, user-friendly Electron-based proxy management tool and Node.js installer for Windows. It is built with Electron, Express, and Node.js, providing a smooth desktop experience for managing proxies and installing Node.js with ease.
+
+It allows you to easily check, install, and manage Node.js on your system, and provides a simple interface to set up HTTP/WS proxies for local development
 
 ## Features
 - **Node.js Installation Check:** Detects if Node.js is installed and shows the current version.
@@ -19,9 +21,14 @@ VeilProxy is a modern, user-friendly proxy management tool and Node.js installer
 
 ## Getting Started
 
-### Prerequisites
-- [Node.js](https://nodejs.org/) (for development/build)
-- [Git](https://git-scm.com/)
+### Technologies Used
+- Electron — Desktop shell for building cross-platform apps with JavaScript, HTML, and CSS
+
+- Express — Web server framework for Node.js
+
+- Node.js — JavaScript runtime for building server-side tools
+
+- Git — Version control system
 
 ### Installation
 1. **Clone the repository:**
